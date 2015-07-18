@@ -4,9 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var db = require('./db.js');
+var moment = require('moment');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -24,8 +27,24 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
 
+// Log requests
+app.use(function(req, res, next) {
+  db.insert({
+    type: 'request',
+    requestDate: moment().format(),
+    url: req.originalUrl,
+    hostname: req.hostname,
+    ip: req.ip,
+    params: req.params,
+    query: req.query,
+    subdomains: req.subdomains
+  });
+  next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
