@@ -1,0 +1,1 @@
+set DEBUG=preinterviewtest:server:* && supervisor --extensions jade,js,styl ./bin/www

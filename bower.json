@@ -1,0 +1,24 @@
+{
+  "name": "preinterviewtest",
+  "version": "0.0.0",
+  "private": true,
+  "authors": [
+    "Michael Hunter <elec.mike@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "preinterviewtest.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "ember-data": "~1.13.5",
+    "ember": "~1.13.4",
+    "jquery": "~2.1.4",
+    "lodash": "~3.10.0"
+  }
+}

@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    script(src='/socket.io/socket.io.js')
+  body
+    div.container
+        block content
+    script.
+        // Reload the page when the server restarts
+        var socket = io();
+        socket.on('disconnect', function() {
+            setTimeout(function() {
+                location.reload();
+            }, 200);
+        });
