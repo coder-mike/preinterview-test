@@ -49,3 +49,25 @@ App.TestIndexController = Ember.Controller.extend({
     return moment.duration(duration[0], duration[1]).format('h:mm');
   }.property('model.duration')
 });
+
+App.TestStartController = Ember.Controller.extend({
+  firstName: null,
+  lastName: null,
+  email: null,
+  actions: {
+    start: function() {
+      $.post('/api/start-test', {
+        firstName: this.get('firstName'),
+        lastName: this.get('lastName'),
+        email: this.get('email'),
+        testInfo: this.get('model'),
+        testId: this.get('model.testId'),
+        startTime: moment().format()
+      }, function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+      }).fail(function(err) {
+        // TODO
+      });
+    }
+  }
+});

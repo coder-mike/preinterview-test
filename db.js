@@ -17,4 +17,19 @@ db.get = function(name) {
     });
 }
 
+var originalInsert = db.insert;
+db.insert = function(doc) {
+    return new Promise(function(resolve, reject) {
+        console.log("Inserting", doc);
+        originalInsert(doc, function (err, result) {
+            if (err) {
+                reject(err);
+                console.log(err)
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
 module.exports = db;
