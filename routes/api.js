@@ -14,11 +14,15 @@ router.get('/test-info/:testId', function(req, res) {
 router.post('/start-test', function(req, res) {
     // Load test content
     var testContent = db.get('test-content-' + req.body.testId);
+    var testInfo = db.get('test-info-' + req.body.testId);
     // Create new test session
-    var testSession = testContent.then(function(testContent) {
+    var testSession = Promise.all([testContent, testInfo]).then(function(test) {
+        var testContent = test[0];
+        var testInfo = test[1];
         // Merge the test into the test session
         var testSession = {
             type: 'test-session',
+            testInfo: testInfo,
             reqInfo: req.body,
             testId: req.body.testId,
             testContent: testContent,
