@@ -15,12 +15,14 @@ App.Router.map(function() {
   this.resource('test', { path: '/test/:test_id' }, function() {
     this.route('start');
   });
+  this.resource('testSession', { path: '/test-session/:testSession_id' });
 });
 
 App.ApplicationAdapter = DS.RESTAdapter.extend({
   namespace: 'api'
 });
 
+// ---------------------------------- Routes ----------------------------------
 
 App.TestRoute = Ember.Route.extend({
   model: function(params) {
@@ -28,20 +30,16 @@ App.TestRoute = Ember.Route.extend({
   }
 });
 
-App.CompanyModel = DS.Model.extend({
-  name: DS.attr('string'),
-  logoUrl: DS.attr('string'),
-  website: DS.attr('string')
+App.TestSessionRoute = Ember.Route.extend({
+  model: function(params) {
+    return $.getJSON('/api/test-session/' + params.testSession_id);
+  },
+  serialize: function(model) {
+    return { testSession_id: model._id };
+  }
 });
 
-App.TestModel = DS.Model.extend({
-  company: DS.belongsTo('company'),
-  name: DS.attr('string'),
-  description: DS.attr('string'),
-  instructions: DS.attr('string'),
-  numberOfQuestions: DS.attr('questions'),
-  duration: DS.attr('duration')
-});
+// ------------------------------- Controllers --------------------------------
 
 App.TestIndexController = Ember.Controller.extend({
   duration: function() {
@@ -63,11 +61,11 @@ App.TestStartController = Ember.Controller.extend({
         testInfo: this.get('model'),
         testId: this.get('model.testId'),
         startTime: moment().format()
-      }, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
-      }).fail(function(err) {
+      }, function(data, status) {
+        this.transitionTo('testSession', data);
+      }.bind(this)).fail(function(err) {
         // TODO
-      });
+      }.bind(this));
     }
   }
 });

@@ -3,17 +3,19 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Preinterview Test' });
+  res.render('index');
 });
 
-/* GET application page. */
 router.get('/test/:test_id', function(req, res, next) {
-  res.render('app', { title: 'Preinterview Test' });
+  res.render('app');
 });
 
-/* GET application page. */
 router.get('/test/:test_id/start', function(req, res, next) {
-  res.render('app', { title: 'Preinterview Test' });
+  res.render('app');
+});
+
+router.get('/test-session/:testSession_id', function(req, res, next) {
+  res.render('app');
 });
 
 
