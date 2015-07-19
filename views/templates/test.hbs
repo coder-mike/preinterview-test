@@ -1,1 +1,41 @@
-Test {{id}}
+
+<h1>
+    {{model.name}}
+</h1>
+<div class="row">
+    <div class="col-sm-6 col-md-8">
+        <p class="lead">
+            {{model.description}}
+        </p>
+        <p>
+            {{model.instructions}}
+        </p>
+        <div class="row clearfix">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                {{#link-to 'test.start' this class="btn btn-block btn-primary pull-right"}}Start!{{/link-to}}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <table class="table">
+            <tbody>
+                <col align="right">
+                <tr>
+                    <td class="text-right">Test name:</td>
+                    <td>{{model.name}}</td>
+                </tr>
+                <tr>
+                    <td class="text-right">Duration:</td>
+                    <td>{{duration}}</td>
+                </tr>
+                <tr>
+                    <td class="text-right">Questions:</td>
+                    <td>{{model.numberOfQuestions}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

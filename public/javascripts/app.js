@@ -12,7 +12,9 @@ App.Router.reopen({
 });
 
 App.Router.map(function() {
-  this.route('test', { path: '/test/:test_id' });
+  this.resource('test', { path: '/test/:test_id' }, function() {
+    this.route('start');
+  });
 });
 
 App.ApplicationAdapter = DS.RESTAdapter.extend({
@@ -22,6 +24,28 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
 
 App.TestRoute = Ember.Route.extend({
   model: function(params) {
-    return {id: params.test_id};
+    return $.getJSON('/api/test-info/' + params.test_id);
   }
+});
+
+App.CompanyModel = DS.Model.extend({
+  name: DS.attr('string'),
+  logoUrl: DS.attr('string'),
+  website: DS.attr('string')
+});
+
+App.TestModel = DS.Model.extend({
+  company: DS.belongsTo('company'),
+  name: DS.attr('string'),
+  description: DS.attr('string'),
+  instructions: DS.attr('string'),
+  numberOfQuestions: DS.attr('questions'),
+  duration: DS.attr('duration')
+});
+
+App.TestIndexController = Ember.Controller.extend({
+  duration: function() {
+    var duration = this.get('model.duration');
+    return moment.duration(duration[0], duration[1]).format('h:mm');
+  }.property('model.duration')
 });

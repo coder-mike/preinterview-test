@@ -1,16 +1,19 @@
 extends layout
 
 block content
-    h1 Test
     div#ember-app
     script(type="text/x-handlebars",data-template-name="index")
         include templates/index.hbs
-    script(type="text/x-handlebars",data-template-name="test")
+    script(type="text/x-handlebars",data-template-name="test/index")
         include templates/test.hbs
+    script(type="text/x-handlebars",data-template-name="test/start")
+        include templates/testStart.hbs
 
 block scripts
     script(src='/bower_components/ember/ember-template-compiler.js')
     script(src='/bower_components/ember/ember.min.js')
     script(src='/bower_components/ember-data/ember-data.min.js')
+    script(src='/bower_components/moment/min/moment.min.js')
+    script(src='/bower_components/moment-duration-format/lib/moment-duration-format.js')
     script(src='/javascripts/app.js')
 
