@@ -69,3 +69,13 @@ App.TestStartController = Ember.Controller.extend({
     }
   }
 });
+
+// -------------------------------- Components --------------------------------
+App.MarkdownComponentComponent = Ember.Component.extend({
+  markdown: '',
+  didInsertElement: function() {
+    var markdown = this.get('markdown')
+    var html = marked(markdown);
+    this.$().html(html);
+  }
+});

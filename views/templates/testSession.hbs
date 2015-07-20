@@ -1,2 +1,7 @@
 <h1>{{model.testInfo.name}}</h1>
-<h2>{{testContent.questions}}</h2>
+{{#each testContent.questions as |question|}}
+    <h2>Question {{question.number}}</h2>
+    {{markdown-component markdown=question.question}}
+    <h3>Answer</h3>
+    {{textarea class="form-control" value=question.answer rows="6"}}
+{{/each}}

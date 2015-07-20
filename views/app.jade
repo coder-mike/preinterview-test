@@ -10,6 +10,8 @@ block content
         include templates/testStart.hbs
     script(type="text/x-handlebars",data-template-name="testSession")
         include templates/testSession.hbs
+    script(type="text/x-handlebars",data-template-name="components/markdown-component")
+        include templates/markdownComponent.hbs
 
 block scripts
     script(src='/bower_components/ember/ember-template-compiler.js')
@@ -17,5 +19,6 @@ block scripts
     script(src='/bower_components/ember-data/ember-data.min.js')
     script(src='/bower_components/moment/min/moment.min.js')
     script(src='/bower_components/moment-duration-format/lib/moment-duration-format.js')
+    script(src='/bower_components/marked/lib/marked.js')
     script(src='/javascripts/app.js')
 
