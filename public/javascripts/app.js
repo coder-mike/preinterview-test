@@ -78,7 +78,47 @@ App.MarkdownComponentComponent = Ember.Component.extend({
   },
   update: function() {
     var markdown = this.get('markdown')
-    var html = marked(markdown);
+    var html = marked(markdown || "");
     this.$().html(html);
   }.observes('markdown')
+});
+
+App.MarkdownEditorComponent = Ember.Component.extend({
+  markdown: '',
+  didInsertElement: function() {
+    var editor = CodeMirror(this.$()[0], {
+      lineNumbers: true,
+      mode: 'markdown',
+      theme: 'solarized'
+    });
+    this.set('editor', editor);
+    editor.on('change', function() {
+      var editorText = editor.getValue();
+      this.set('value', editorText);
+    }.bind(this));
+    // this.$().addClass('markdown-editor');
+    // Get tab key to simply insert a tab
+    // this.$().keydown(function(e) {
+    //   if(e.keyCode === 9) { // tab was pressed
+    //     // get caret position/selection
+    //     var start = this.selectionStart;
+    //     var end = this.selectionEnd;
+
+    //     var $this = $(this);
+    //     var value = $this.val();
+
+    //     // set textarea value to: text before caret + tab + text after caret
+    //     $this.val(value.substring(0, start)
+    //       + "    "
+    //       + value.substring(end));
+
+    //     // put caret at right position again (add one for the tab)
+    //     this.selectionStart = this.selectionEnd = start + 4;
+
+    //     // prevent the focus lose
+    //     e.preventDefault();
+    //   }
+    // });
+    // this._super();
+  }
 });
