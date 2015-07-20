@@ -3,5 +3,11 @@
     <h2>Question {{question.number}}</h2>
     {{markdown-component markdown=question.question}}
     <h3>Answer</h3>
-    {{textarea class="form-control" value=question.answer rows="6"}}
+    <div class="col-md-6">
+        {{textarea class="form-control" value=question.answer rows="6"}}
+    </div>
+    <div class="col-md-6">
+        {{markdown-component markdown=question.answer}}
+    </div>
+
 {{/each}}

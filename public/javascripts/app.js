@@ -74,8 +74,11 @@ App.TestStartController = Ember.Controller.extend({
 App.MarkdownComponentComponent = Ember.Component.extend({
   markdown: '',
   didInsertElement: function() {
+    this.update();
+  },
+  update: function() {
     var markdown = this.get('markdown')
     var html = marked(markdown);
     this.$().html(html);
-  }
+  }.observes('markdown')
 });
