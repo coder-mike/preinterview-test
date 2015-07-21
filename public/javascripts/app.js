@@ -73,15 +73,26 @@ App.TestStartController = Ember.Controller.extend({
 // -------------------------------- Components --------------------------------
 App.MarkdownComponentComponent = Ember.Component.extend({
   markdown: '',
+  timeout: null,
   didInsertElement: function() {
     this.update();
   },
+  markdownChanged: function() {
+    if (this.get('timeout')) {
+      clearTimeout(this.get('timeout'));
+    }
+    var timeout = setTimeout(function() {
+      this.update();
+    }.bind(this), 500);
+    this.set('timeout', timeout);
+  }.observes('markdown'),
+
   update: function() {
     var markdown = this.get('markdown')
     var html = marked(markdown || "");
     this.$().html(html);
     Ember.run.once(Hyphenator, 'run');
-  }.observes('markdown')
+  }
 });
 
 App.MarkdownEditorComponent = Ember.Component.extend({
