@@ -23,6 +23,25 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
   namespace: 'api'
 });
 
+
+function sendJSON(url, obj) {
+  // Wrap because jQuery's promises are weird
+  return new Promise(function (resolve, reject) {
+    $.ajax({
+      type: "POST",
+      url: '/api/start-test',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(obj),
+      success: function(data, status) {
+        resolve(data);
+      }
+    }).fail(function(err) {
+      reject(err);
+    });
+  });
+}
+
 // ---------------------------------- Routes ----------------------------------
 
 App.TestRoute = Ember.Route.extend({
@@ -61,16 +80,16 @@ App.TestStartController = Ember.ObjectController.extend({
   email: null,
   actions: {
     start: function() {
-      $.post('/api/start-test', {
+      sendJSON('/api/start-test', {
         firstName: this.get('firstName'),
         lastName: this.get('lastName'),
         email: this.get('email'),
         testInfo: this.get('model'),
         testId: this.get('model.testId'),
         startTime: moment().format()
-      }, function(data, status) {
+      }).then(function(data) {
         this.transitionTo('testSession', data);
-      }.bind(this)).fail(function(err) {
+      }.bind(this)).catch(function(err) {
         // TODO
       }.bind(this));
     }
@@ -80,12 +99,11 @@ App.TestStartController = Ember.ObjectController.extend({
 App.TestSessionController = Ember.ObjectController.extend({
   actions: {
     submit: function() {
-      $.post('/api/submit-test',
-        this.get('model')
-      , function(data, status) {
+      sendJSON('/api/submit-test', this.get('model'))
+      .then(function(data, status) {
         alert("Submitted!");
         this.transitionTo('testComplete');
-      }.bind(this)).fail(function(err) {
+      }.bind(this)).catch(function(err) {
         // TODO
         alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
       }.bind(this));
