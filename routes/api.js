@@ -47,4 +47,21 @@ router.get('/test-session/:testSessionId', function(req, res) {
     }));
 });
 
+router.post('/submit-test', function(req, res) {
+    var testSession = req.body;
+    testSession.submitted = true;
+    if (!testSession.submittedTime) {
+        testSession.submittedTime = [];
+    }
+    testSession.submittedTime.push(moment().format()); // Just in case they submit more than once
+
+    var updatedTestSession = db.insert(testSession).then(function(insertResult) {
+        // Update revision
+        testSession._rev = insertResult.rev;
+        return testSession;
+    });
+
+    res.json(updatedTestSession);
+});
+
 module.exports = router;

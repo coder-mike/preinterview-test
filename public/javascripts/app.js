@@ -16,6 +16,7 @@ App.Router.map(function() {
     this.route('start');
   });
   this.resource('testSession', { path: '/test-session/:testSession_id' });
+  this.resource('testComplete', { path: '/test-complete/:testComplete_id' });
 });
 
 App.ApplicationAdapter = DS.RESTAdapter.extend({
@@ -39,16 +40,22 @@ App.TestSessionRoute = Ember.Route.extend({
   }
 });
 
+App.TestCompleteRoute = Ember.Route.extend({
+  model: function(params) {
+    return null;
+  }
+});
+
 // ------------------------------- Controllers --------------------------------
 
-App.TestIndexController = Ember.Controller.extend({
+App.TestIndexController = Ember.ObjectController.extend({
   duration: function() {
     var duration = this.get('model.duration');
     return moment.duration(duration[0], duration[1]).format('h:mm');
   }.property('model.duration')
 });
 
-App.TestStartController = Ember.Controller.extend({
+App.TestStartController = Ember.ObjectController.extend({
   firstName: null,
   lastName: null,
   email: null,
@@ -65,6 +72,22 @@ App.TestStartController = Ember.Controller.extend({
         this.transitionTo('testSession', data);
       }.bind(this)).fail(function(err) {
         // TODO
+      }.bind(this));
+    }
+  }
+});
+
+App.TestSessionController = Ember.ObjectController.extend({
+  actions: {
+    submit: function() {
+      $.post('/api/submit-test',
+        this.get('model')
+      , function(data, status) {
+        alert("Submitted!");
+        this.transitionTo('testComplete');
+      }.bind(this)).fail(function(err) {
+        // TODO
+        alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
       }.bind(this));
     }
   }

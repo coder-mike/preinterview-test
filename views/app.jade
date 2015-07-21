@@ -3,6 +3,8 @@ extends layout
 
 block content
     div#ember-app
+    script(type="text/x-handlebars",data-template-name="application")
+        include templates/application.hbs
     script(type="text/x-handlebars",data-template-name="index")
         include templates/index.hbs
     script(type="text/x-handlebars",data-template-name="test/index")
@@ -11,6 +13,8 @@ block content
         include templates/testStart.hbs
     script(type="text/x-handlebars",data-template-name="testSession")
         include templates/testSession.hbs
+    script(type="text/x-handlebars",data-template-name="testComplete")
+        include templates/testComplete.hbs
     script(type="text/x-handlebars",data-template-name="components/markdown-component")
         include templates/markdownComponent.hbs
     script(type="text/x-handlebars",data-template-name="components/markdown-editor")
