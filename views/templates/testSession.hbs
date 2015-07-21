@@ -1,13 +1,15 @@
 <h1>{{model.testInfo.name}}</h1>
 {{#each testContent.questions as |question|}}
-    <h2>Question {{question.number}}</h2>
+  <h2>Question {{question.number}}</h2>
+  <div class="question hyphenate">
     {{markdown-component markdown=question.question}}
-    <h3>Answer</h3>
-    <div class="col-md-6">
-        {{markdown-editor class="form-control" value=question.answer rows="6"}}
-    </div>
-    <div class="col-md-6">
-        {{markdown-component markdown=question.answer}}
-    </div>
-
+  </div>
+  <h3>Answer  </h3>
+  <div class="col-md-6">
+    <div class="heading-note">You can use markdown</div>
+    {{markdown-editor value=question.answer rows="6"}}
+  </div>
+  <div class="col-md-6">
+    {{markdown-component markdown=question.answer}}
+  </div>
 {{/each}}

@@ -1,5 +1,6 @@
 extends layout
 
+
 block content
     div#ember-app
     script(type="text/x-handlebars",data-template-name="index")
@@ -24,9 +25,10 @@ block scripts
     script(src='/bower_components/marked/lib/marked.js')
     script(src='/bower_components/codemirror/lib/codemirror.js')
     script(src='/bower_components/codemirror/mode/markdown/markdown.js')
+    script(src='/javascripts/lib/Hyphenator.js')
     script(src='/javascripts/app.js')
 
     link(rel='stylesheet', href='/bower_components/codemirror/lib/codemirror.css')
-    link(rel='stylesheet', href='/bower_components/codemirror/theme/solarized.css')
+    link(rel='stylesheet', href='/bower_components/codemirror/theme/mdn-like.css')
 
 

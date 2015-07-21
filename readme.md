@@ -4,16 +4,28 @@ A website for testing job interview applicants, providing a simple way of settin
 
 It is primarily aimed at software development positions at the moment. The questions can contain code samples. The answers can also contain code. For simplicity, both the questions and answers will be edited as markdown.
 
+## Contributing
+
+To contribute, clone the repository, and run `npm install` (you need nodejs installed to do this). To run the website, it's useful to create a `Procfile` with the following content:
+
+    web: supervisor ./bin/www
+
+(For this you also must have supervisor installed).
+
+You must also have a `.env` file with environment variables. Specifically, you need to add a `CLOUDANT_URL` to the env file to be able to connect to the couch database (it does not need to be Cloudant specifically, but that's what we're using).
+
+The to start the website, then run `nf start`. This requires that you've installed `node-foreman`.
+
 
 ## General Design
 
-The project is in the design phase.
+The project is mainly in the design phase.
 
 The home screen will say what the website is, and present the user with two options: are you here as an employer or an employee? The new user will click the appropriate button.
 
 As an employee, the user will type the name of the company they want to test for. In the early days we'll keep this list reasonably private, since there won't be many companies. The user can click on the company.
 
-The most fundamental operation will be where a company sets up a profile, and creates tests. Each test has a dedicate private URL. The test URL will be sent to an applicant to compete. The applicant will click the URL and it will open a start page for the test. The start page will show the company name and logo, the name of the test, and a short description or the test, including the time  duration, perhaps the number of questions, and a note about the process and format, and say that the test should only be taken once (if that's true). To start a new test, type your email address and click start. (Note about email address being used for identity purposes only, and no spam)
+The most fundamental operation will be where a company sets up a profile, and creates tests. Each test has a dedicated private URL. The test URL can be sent to an applicant to compete. The applicant will click the URL and it will open a start page for the test. The start page will show the company name and logo, the name of the test, and a short description or the test, including the time  duration, perhaps the number of questions, and a note about the process and format, and say that the test should only be taken once (if that's true). To start a new test, type your email address and click start. (Note about email address being used for identity purposes only, and no spam)
 
 We can expect that sometimes multiple applicants will use the same computer to complete the test. For example if the computer is at a recruitment agency or in an interview room. But we also want the applicant to be able to resume the test if their Internet or browser fails (or the server fails for some reason). I think the easiest way to do this is to maintain a list of test sessions in the web session. If the email address matches the session then that test session is resumed.
 
@@ -37,7 +49,7 @@ At the top of the page is a time counter. If the test is timed then it counts do
 
 At the bottom of the test is a box for any additional notes or comments to the examiner (says optional). This is the part where they can make excuses if they feel the need.
 
-If the user runs out of time, the time bar shows red, and comes up with a message saying that their out of time. They may continue making changes and adding answers, and it is up to the examiner whether to accept those answers. (there should be a note on the instruction page about what happens at this point). It tells the user that all answers have been recorded, and any modifications will also be available to the examiner to choose to use or ignore.
+If the user runs out of time, the time bar shows red, and comes up with a message saying that they're out of time. They may continue making changes and adding answers, and it is up to the examiner whether to accept those answers. (there should be a note on the instruction page about what happens at this point). It tells the user that all answers have been recorded, and any modifications will also be available to the examiner to choose to use or ignore.
 
 At the bottom of the page, after the additional comments section, there is a submit button. For the moment there will be no cancel button. Next to the submit button will be a checkbox saying that the user certifies that this is his own work.
 
@@ -48,9 +60,11 @@ If a user opens up the same test on a different computer, we don't want to show 
 
 ## Shortest proof of concept
 
-To get a minimum working website, the main thing we want is the applicants side, and we can manually set up tests with direct access to the database.
+To get a minimum working website, the main thing we want is the applicant's side, and we can manually set up tests with direct access to the database.
 
-We'll use Ember CLI for development convenience.
+The website is built on Ember, but doesn't use Ember CLI or Ember Data, because at least at this stage it doesn't require the complexity. There are no build steps required, which makes for very fast development. It also means that files can be changed directly in the Chrome inspector, which is also a major benefit (with the exception of styles, which are compiled on the fly).
+
+
 
 
 
