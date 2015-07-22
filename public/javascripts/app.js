@@ -14,6 +14,7 @@ App.Router.reopen({
 App.Router.map(function() {
   this.resource('test', { path: '/test/:test_id' }, function() {
     this.route('start');
+    this.resource('editor');
   });
   this.resource('testSession', { path: '/test-session/:testSession_id' });
   this.resource('testComplete', { path: '/test-complete/:testComplete_id' });
@@ -73,6 +74,13 @@ App.TestCompleteRoute = Ember.Route.extend({
   }
 });
 
+App.EditorRoute = Ember.Route.extend({
+  model: function(params) {
+    var test = this.modelFor("test");
+    return $.getJSON('/api/test/' + test.testId);
+  }
+});
+
 // ------------------------------- Controllers --------------------------------
 
 App.TestIndexController = Ember.ObjectController.extend({
@@ -114,6 +122,38 @@ App.TestSessionController = Ember.ObjectController.extend({
       }.bind(this)).catch(function(err) {
         // TODO
         alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
+      }.bind(this));
+    }
+  }
+});
+
+App.EditorController = Ember.ObjectController.extend({
+  actions: {
+    addQuestion: function() {
+      var questions = this.get('questions');
+      questions.push({
+        question: 'new question',
+        number: questions.length + 1
+      });
+      this.set('info.numberOfQuestions', questions.length);
+      this.notifyPropertyChange('model');
+    },
+    addPart: function(question) {
+      console.log(question);
+      question.parts = question.parts || [];
+      question.parts.push({
+        question: 'new part',
+        number: String.fromCharCode('A'.charCodeAt(0) + question.parts.length)
+      })
+      this.notifyPropertyChange('model');
+    },
+    cancel: function() {
+      alert("Sorry, not implemented");
+      // this.transitionTo('editor', this.get('_id'));
+    },
+    save: function() {
+      sendJSON('/api/save-test', this.get('model')).then(function(updatedText) {
+        this.set('model', updatedText);
       }.bind(this));
     }
   }
@@ -164,7 +204,8 @@ App.MarkdownEditorComponent = Ember.Component.extend({
       lineNumbers: true,
       mode: 'markdown',
       theme: 'mdn-like',
-      value: this.get('value') || ''
+      value: this.get('value') || '',
+      lineWrapping: true
     });
     this.set('editor', editor);
     editor.on('change', function() {

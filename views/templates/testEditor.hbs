@@ -1,0 +1,47 @@
+<h1>{{info.name}}</h1>
+<h2>Description</h2>
+{{markdown-answer answer=info.description createText="Add description"}}
+<h2>Instructions</h2>
+{{markdown-answer answer=info.instructions createText="Add instructions"}}
+
+{{#each questions as |question|}}
+  <h2>
+    <a class="header-anchor"
+      id="question-{{question.number}}"
+      href="#question-{{question.number}}">
+      <span class="header-link"></span>
+    </a>
+    Question {{question.number}}
+  </h2>
+  <h3>Information</h3>
+  {{markdown-answer answer=question.information createText="Add question information"}}
+  <h3>Question</h3>
+  {{markdown-answer answer=question.question createText="Add question content"}}
+  {{#each question.parts as |part|}}
+    <h3>
+      <a class="header-anchor"
+        id="question-{{question.number}}-{{part.number}}"
+        href="#question-{{question.number}}-{{part.number}}">
+        <span class="header-link"></span>
+      </a>
+      Part {{part.number}}
+    </h3>
+    {{markdown-answer answer=part.question createText="Add part content"}}
+  {{/each}}
+  <button class="btn btn-default" {{action 'addPart' question}} >Add Part</button>
+  <hr>
+{{/each}}
+<button class="btn btn-default" {{action 'addQuestion'}} >Add Question</button>
+
+
+<hr>
+<div class="row form-group">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3">
+    <button class="btn btn-block btn-default" {{action 'cancel'}} >Cancel</button>
+  </div>
+  <div class="col-sm-3">
+    <button class="btn btn-block btn-primary" {{action 'save'}} >Save</button>
+  </div>
+</div>

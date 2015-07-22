@@ -2,7 +2,9 @@
   {{#if hasAnswer}}
     {{#if editing}}
       <div class="well">
-        <h3>Answer</h3>
+        {{#if heading}}
+          <h3>{{heading}}</h3>
+        {{/if}}
         <div class="row answer-well">
           <div class="col-md-6 clearfix">
             <div class="heading-note">You can use markdown</div>
@@ -15,7 +17,9 @@
       </div>
     {{else}}
       <div class="well answer-well clickable" {{action 'edit'}}>
-        <h3>Answer</h3>
+        {{#if heading}}
+          <h3>{{heading}}</h3>
+        {{/if}}
         <section class="answer-html">
           {{markdown-component markdown=answer runHyphenate=true}}
         </section>
@@ -23,6 +27,10 @@
       </div>
     {{/if}}
   {{else}}
-    <button class="btn btn-primary" {{action 'edit'}} >Answer</button>
+    {{#if createText}}
+      <button class="btn btn-primary" {{action 'edit'}} >{{createText}}</button>
+    {{else}}
+      <button class="btn btn-primary" {{action 'edit'}} >Edit</button>
+    {{/if}}
   {{/if}}
 </section>

@@ -14,6 +14,10 @@ router.get('/test/:test_id/start', function(req, res, next) {
   res.render('app');
 });
 
+router.get('/test/:test_id/editor', function(req, res, next) {
+  res.render('app');
+});
+
 router.get('/test-session/:testSession_id', function(req, res, next) {
   res.render('app');
 });

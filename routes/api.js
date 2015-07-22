@@ -8,24 +8,34 @@ var router = express.Router();
 router.use(require('express-promise')());
 
 router.get('/test-info/:testId', function(req, res) {
-    res.json(db.get('test-info-' + req.params.testId));
+    var test = db.get(req.params.testId).then(verifyType('test'));
+    res.json(test.then(function(test) {
+        test.info.testId = test._id;
+        return test.info;
+    }));
 });
+
+function verifyType(type) {
+    return function (document) {
+        if (document.type !== type) {
+            throw new Error("Document types do not match");
+        }
+        return document;
+    }
+}
 
 router.post('/start-test', function(req, res) {
     // Load test content
-    var testContent = db.get('test-content-' + req.body.testId);
-    var testInfo = db.get('test-info-' + req.body.testId);
+    var test = db.get(req.body.testId).then(verifyType('test'));
     // Create new test session
-    var testSession = Promise.all([testContent, testInfo]).then(function(test) {
-        var testContent = test[0];
-        var testInfo = test[1];
+    var testSession = test.then(function(test) {
         // Merge the test into the test session
         var testSession = {
             type: 'test-session',
-            testInfo: testInfo,
+            testInfo: test.info,
             reqInfo: req.body,
             testId: req.body.testId,
-            testContent: testContent,
+            questions: test.questions,
             startTime: moment().format() // The reqInfo also has a time, but we record both because I don't trust the client necessarily
         };
         return db.insert(testSession).then(function(insertResult) {
@@ -64,5 +74,18 @@ router.post('/submit-test', function(req, res) {
     res.json(updatedTestSession);
 });
 
+router.get('/test/:testId', function(req, res) {
+    res.json(db.get(req.params.testId).then(verifyType('test')));
+});
+
+router.post('/save-test', function(req, res) {
+    var test = req.body;
+    test.type = "test";
+    res.json(db.insert(test).then(function (insertResult) {
+        // update revision
+        test._rev = insertResult.rev;
+        return test;
+    }));
+});
 
 module.exports = router;

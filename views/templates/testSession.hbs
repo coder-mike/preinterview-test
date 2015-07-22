@@ -1,6 +1,10 @@
 {{!-- <div class="alert alert-warning">Your work will not automatically be saved. Do not close this page before submitting.</div> --}}
-<h1>{{model.testInfo.name}}</h1>
-{{#each testContent.questions as |question|}}
+<h1>{{testInfo.name}}</h1>
+<h2>Instructions</h2>
+<section class="question hyphenate">
+  {{markdown-component markdown=testInfo.instructions}}
+</section>
+{{#each questions as |question|}}
   <h2>
     <a class="header-anchor"
       id="question-{{question.number}}"
@@ -18,7 +22,7 @@
     <section class="question hyphenate">
       {{markdown-component markdown=question.question runHyphenate=true}}
     </section>
-    {{markdown-answer answer=question.answer}}
+    {{markdown-answer answer=question.answer heading="Answer" createText="Answer"}}
   {{/if}}
   {{#if question.parts}}
     {{#each question.parts as |part|}}
@@ -33,11 +37,18 @@
       <section class="question hyphenate">
         {{markdown-component markdown=part.question runHyphenate=true}}
       </section>
-      {{markdown-answer answer=part.answer}}
+      {{markdown-answer answer=part.answer heading="Answer" createText="Answer"}}
     {{/each}}
   {{/if}}
   <hr>
 {{/each}}
+<h2>Additional Comments</h2>
+<section class="question hyphenate">
+  <p>Please provide any additional comments here. This is where you can make excuses about the dog eating your laptop, or complain about how unfair the test was. Don't be shy, all feedback is welcome.</p>
+</section>
+{{markdown-answer answer=model.comments heading="Comments" createText="Add comments"}}
+
+
 <hr>
 <div class="row form-group">
   <div class="col-sm-3"></div>
