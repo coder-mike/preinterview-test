@@ -12,7 +12,6 @@ router.get('/test-info/:testId', function(req, res) {
 });
 
 router.post('/start-test', function(req, res) {
-    console.log(req.body);
     // Load test content
     var testContent = db.get('test-content-' + req.body.testId);
     var testInfo = db.get('test-info-' + req.body.testId);

@@ -29,7 +29,7 @@ function sendJSON(url, obj) {
   return new Promise(function (resolve, reject) {
     $.ajax({
       type: "POST",
-      url: '/api/start-test',
+      url: url,
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       data: JSON.stringify(obj),
@@ -40,6 +40,14 @@ function sendJSON(url, obj) {
       reject(err);
     });
   });
+}
+
+function clearSelection() {
+  if ( document.selection ) {
+    document.selection.empty();
+  } else if ( window.getSelection ) {
+    window.getSelection().removeAllRanges();
+  }
 }
 
 // ---------------------------------- Routes ----------------------------------
@@ -101,8 +109,8 @@ App.TestSessionController = Ember.ObjectController.extend({
     submit: function() {
       sendJSON('/api/submit-test', this.get('model'))
       .then(function(data, status) {
-        alert("Submitted!");
-        this.transitionTo('testComplete');
+        // this.transitionTo('testComplete');
+        this.set('model', data);
       }.bind(this)).catch(function(err) {
         // TODO
         alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
@@ -115,16 +123,24 @@ App.TestSessionController = Ember.ObjectController.extend({
 App.MarkdownComponentComponent = Ember.Component.extend({
   markdown: '',
   timeout: null,
+  runHyphenate: false,
   didInsertElement: function() {
     this.update();
   },
+
+  willDestroyElement: function() {
+    if (this.get('timeout')) {
+      clearTimeout(this.get('timeout'));
+    }
+  },
+
   markdownChanged: function() {
     if (this.get('timeout')) {
       clearTimeout(this.get('timeout'));
     }
     var timeout = setTimeout(function() {
       this.update();
-    }.bind(this), 500);
+    }.bind(this), 0);
     this.set('timeout', timeout);
   }.observes('markdown'),
 
@@ -132,23 +148,82 @@ App.MarkdownComponentComponent = Ember.Component.extend({
     var markdown = this.get('markdown')
     var html = marked(markdown || "");
     this.$().html(html);
-    Ember.run.once(Hyphenator, 'run');
-  }
+    if (this.get('runHyphenate')) {
+      Ember.run.once(Hyphenator, 'run');
+    }
+  },
+
 });
 
 App.MarkdownEditorComponent = Ember.Component.extend({
-  markdown: '',
+  value: '',
+  focus: false,
   didInsertElement: function() {
     this.$().addClass('markdown-editor');
     var editor = CodeMirror(this.$()[0], {
       lineNumbers: true,
       mode: 'markdown',
-      theme: 'mdn-like'
+      theme: 'mdn-like',
+      value: this.get('value') || ''
     });
     this.set('editor', editor);
     editor.on('change', function() {
       var editorText = editor.getValue();
       this.set('value', editorText);
     }.bind(this));
+
+    this.focusChanged();// Update focus
+
+    this.$().on("focusout", function() {
+      this.set('focus', false);
+    }.bind(this));
+  },
+
+  valueChanged: function() {
+    var editor = this.get('editor');
+    var editorText = editor.getValue();
+    var value = this.get('value');
+    if (editorText !== value) {
+      editor.setValue(value);
+    }
+  }.observes('value'),
+
+  focusChanged: function () {
+    if (this.get('focus')) {
+      this.get('editor').focus();
+    }
+  }.observes('focus')
+});
+
+App.MarkdownAnswerComponent = Ember.Component.extend({
+  answer: '',
+  editing: false,
+  editorFocus: false,
+
+  didInsertElement: function() {
+    this.set('editorFocus', true);
+  },
+
+  hasAnswer: function() {
+    return this.get('answer') || this.get('editing');
+  }.property('answer', 'editing'),
+
+  focusChanged: function() {
+    if (this.get('editorFocus') === false) {
+      setTimeout(function() {
+        this.set('editing', false);
+      }.bind(this), 100);
+      // this is a work-around for the fact that removing the code editor seems to cause a new selection of parts of the document
+      // Ember.run.once(this, function() {
+      //   clearSelection();
+      // })
+    }
+  }.observes('editorFocus'),
+
+  actions: {
+    edit: function() {
+      this.set('editing', true);
+      this.set('editorFocus', true);
+    }
   }
 });

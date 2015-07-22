@@ -1,20 +1,42 @@
 {{!-- <div class="alert alert-warning">Your work will not automatically be saved. Do not close this page before submitting.</div> --}}
 <h1>{{model.testInfo.name}}</h1>
 {{#each testContent.questions as |question|}}
-  <h2>Question {{question.number}}</h2>
-  <div class="question hyphenate">
-    {{markdown-component markdown=question.question}}
-  </div>
-  <h3>Answer</h3>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="heading-note">You can use markdown</div>
-      {{markdown-editor value=question.answer rows="6"}}
-    </div>
-    <div class="col-md-6 answer-html">
-      {{markdown-component markdown=question.answer}}
-    </div>
-  </div>
+  <h2>
+    <a class="header-anchor"
+      id="question-{{question.number}}"
+      href="#question-{{question.number}}">
+      <span class="header-link"></span>
+    </a>
+    Question {{question.number}}
+  </h2>
+  {{#if question.information}}
+    <section class="question hyphenate">
+      {{markdown-component markdown=question.information runHyphenate=true}}
+    </section>
+  {{/if}}
+  {{#if question.question}}
+    <section class="question hyphenate">
+      {{markdown-component markdown=question.question runHyphenate=true}}
+    </section>
+    {{markdown-answer answer=question.answer}}
+  {{/if}}
+  {{#if question.parts}}
+    {{#each question.parts as |part|}}
+      <h3>
+        <a class="header-anchor"
+          id="question-{{question.number}}-{{part.number}}"
+          href="#question-{{question.number}}-{{part.number}}">
+          <span class="header-link"></span>
+        </a>
+        Part {{part.number}}
+      </h3>
+      <section class="question hyphenate">
+        {{markdown-component markdown=part.question runHyphenate=true}}
+      </section>
+      {{markdown-answer answer=part.answer}}
+    {{/each}}
+  {{/if}}
+  <hr>
 {{/each}}
 <hr>
 <div class="row form-group">

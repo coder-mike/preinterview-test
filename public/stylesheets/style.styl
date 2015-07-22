@@ -36,6 +36,20 @@ h1, h2, h3, h4, h5, h6
     h3
         font-weight: 700
         font-size: 15px
-    pre, code
-        font-family: 'Roboto Mono', monospace;
 
+pre, code
+    font-family: 'Roboto Mono', monospace;
+
+.header-anchor
+  display: block; position: relative; top: -70px; visibility: hidden;
+
+.btn
+  min-width: 100px
+.btn-simple
+  &:hover
+    background-color: gray
+
+.answer-well.clickable
+  cursor: pointer
+  &:hover
+    background-color: #f4f1ec

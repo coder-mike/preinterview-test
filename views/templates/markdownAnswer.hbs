@@ -1,0 +1,28 @@
+<section>
+  {{#if hasAnswer}}
+    {{#if editing}}
+      <div class="well">
+        <h3>Answer</h3>
+        <div class="row answer-well">
+          <div class="col-md-6 clearfix">
+            <div class="heading-note">You can use markdown</div>
+            {{markdown-editor focus=editorFocus value=answer rows="6"}}
+          </div>
+          <section class="col-md-6 answer-html">
+            {{markdown-component markdown=answer}}
+          </section>
+        </div>
+      </div>
+    {{else}}
+      <div class="well answer-well clickable" {{action 'edit'}}>
+        <h3>Answer</h3>
+        <section class="answer-html">
+          {{markdown-component markdown=answer runHyphenate=true}}
+        </section>
+        {{!-- <button class="btn btn-simple" {{action 'edit'}} >Edit</button> --}}
+      </div>
+    {{/if}}
+  {{else}}
+    <button class="btn btn-primary" {{action 'edit'}} >Answer</button>
+  {{/if}}
+</section>
