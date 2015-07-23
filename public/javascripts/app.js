@@ -26,7 +26,6 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
 
 marked.setOptions({
   highlight: function (code) {
-    console.log(hljs.highlightAuto(code).value)
     return hljs.highlightAuto(code).value;
   }
 });
@@ -152,7 +151,6 @@ App.EditorController = Ember.ObjectController.extend({
       this.notifyPropertyChange('model');
     },
     addPart: function(question) {
-      console.log(question);
       question.parts = question.parts || [];
       question.parts.push({
         question: 'new part',

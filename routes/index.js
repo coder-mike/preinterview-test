@@ -22,5 +22,9 @@ router.get('/test-session/:testSession_id', function(req, res, next) {
   res.render('app');
 });
 
+router.get('/test-complete/:testSession_id', function(req, res, next) {
+  res.render('app');
+});
+
 
 module.exports = router;
