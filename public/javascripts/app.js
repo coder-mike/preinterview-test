@@ -115,7 +115,7 @@ App.TestStartController = Ember.ObjectController.extend({
         startTime: moment().format()
       }).then(function(data) {
         l.stop();
-        this.transitionTo('testSession', data);
+        this.transitionToRoute('testSession', data);
       }.bind(this)).catch(function(err) {
         l.stop();
         // TODO
@@ -129,10 +129,11 @@ App.TestSessionController = Ember.ObjectController.extend({
     submit: function() {
       sendJSON('/api/submit-test', this.get('model'))
       .then(function(data, status) {
-        // this.transitionTo('testComplete');
         this.set('model', data);
+        this.transitionToRoute('testComplete', data.testId);
       }.bind(this)).catch(function(err) {
         // TODO
+        console.error(err.stack);
         alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
       }.bind(this));
     }
