@@ -74,6 +74,17 @@ router.post('/submit-test', function(req, res) {
     res.json(updatedTestSession);
 });
 
+router.post('/save-test/', function(req, res) {
+    var testSession = req.body;
+    var updatedTestSession = db.insert(testSession).then(function(insertResult) {
+        // Update revision
+        testSession._rev = insertResult.rev;
+        return testSession;
+    });
+
+    res.json(updatedTestSession);
+});
+
 router.get('/test/:testId', function(req, res) {
     res.json(db.get(req.params.testId).then(verifyType('test')));
 });

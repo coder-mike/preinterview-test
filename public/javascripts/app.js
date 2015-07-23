@@ -31,7 +31,6 @@ marked.setOptions({
   smartypants: true,
 });
 
-
 function sendJSON(url, obj) {
   // Wrap because jQuery's promises are weird
   return new Promise(function (resolve, reject) {
@@ -63,6 +62,10 @@ function clearSelection() {
 App.TestRoute = Ember.Route.extend({
   model: function(params) {
     return $.getJSON('/api/test-info/' + params.test_id);
+  },
+  renderTemplate: function(controller, model) {
+    this.render();
+    $(document).attr('title', "Test - " + model.name);
   }
 });
 
@@ -72,6 +75,10 @@ App.TestSessionRoute = Ember.Route.extend({
   },
   serialize: function(model) {
     return { testSession_id: model._id };
+  },
+  renderTemplate: function(controller, model) {
+    this.render();
+    $(document).attr('title', "Test Session - " + model.testInfo.name);
   }
 });
 
@@ -85,6 +92,10 @@ App.EditorRoute = Ember.Route.extend({
   model: function(params) {
     var test = this.modelFor("test");
     return $.getJSON('/api/test/' + test.testId);
+  },
+  renderTemplate: function(controller, model) {
+    this.render();
+    $(document).attr('title', "Editor - " + model.info.name);
   }
 });
 
@@ -125,17 +136,68 @@ App.TestStartController = Ember.ObjectController.extend({
 });
 
 App.TestSessionController = Ember.ObjectController.extend({
+  autoSaveTimer: null,
+  autoSaveInterval: 60*1000,
+  autoSaveError: null,
+  init: function() {
+    this._super();
+    // Register auto-save timer
+    var autoSaveTimer = Ember.run.later(this, 'autoSave', null, this.get('autoSaveInterval'));
+    this.set('autoSaveTimer', autoSaveTimer);
+  },
+  willDestroy: function() {
+    Ember.run.cancel(this.get('autoSaveTimer'));
+    this.set('autoSaveTimer', null);
+
+    this._super();
+  },
+  autoSave: function() {
+    // TODO: Only save if modified
+    sendJSON('/api/save-test', this.get('model'))
+      .then(function(data, status) {
+        // Update revision
+        this.set('model._rev', data._rev);
+        this.set('autoSaveError', null);
+      }.bind(this)).catch(function(err) {
+        this.set('autoSaveError', 'Warning: could not auto-save.');
+      }.bind(this));
+
+    // Schedule next auto-save
+    var autoSaveTimer = this.get('autoSaveTimer')
+    if (autoSaveTimer) {
+      autoSaveTimer = Ember.run.later(this, 'autoSave', null, this.get('autoSaveInterval'));
+      this.set('autoSaveTimer', autoSaveTimer);
+    }
+  },
   actions: {
     submit: function() {
+      var l = Ladda.create($('#submit-button')[0]);
+      l.start();
       sendJSON('/api/submit-test', this.get('model'))
-      .then(function(data, status) {
-        this.set('model', data);
-        this.transitionToRoute('testComplete', data.testId);
-      }.bind(this)).catch(function(err) {
-        // TODO
-        console.error(err.stack);
-        alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
-      }.bind(this));
+        .then(function(data, status) {
+          l.stop();
+          this.set('model', data);
+          this.transitionToRoute('testComplete', data.testId);
+        }.bind(this)).catch(function(err) {
+          l.stop();
+          // TODO
+          console.error(err.stack);
+          alert("There was a problem submitting your test. Please print to PDF and manually email to the business. We apologize for any inconvenience.")
+        }.bind(this));
+    },
+    save: function() {
+      var l = Ladda.create($('#save-button')[0]);
+      l.start();
+      sendJSON('/api/save-test', this.get('model'))
+        .then(function(data, status) {
+          this.set('model', data);
+          this.set('autoSaveError', null);
+          l.stop();
+          location.reload();
+        }.bind(this)).catch(function(err) {
+          l.stop();
+          alert('Error: could not save.');
+        }.bind(this));
     }
   }
 });
@@ -201,7 +263,7 @@ App.MarkdownComponentComponent = Ember.Component.extend({
     var html = marked(markdown || "");
     this.$().html(html);
     if (this.get('runHyphenate')) {
-      Ember.run.once(Hyphenator, 'run');
+      // Ember.run.once(Hyphenator, 'run');
     }
   },
 

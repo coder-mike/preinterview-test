@@ -1,6 +1,23 @@
 {{!-- <div class="alert alert-warning">Your work will not automatically be saved. Do not close this page before submitting.</div> --}}
 <h1>{{testInfo.name}}</h1>
+{{#if submittedTime}}
+  <div class="alert alert-warning" role="alert">
+    This testing session has already been submitted. You may make further
+    changes and resubmit, but it is up to the employer as to whether the changes
+    are accepted. If you are not the same person who submitted these answers,
+    please {{#link-to 'test' testId}}start a new session{{/link-to}}.
+  </div>
+{{/if}}
+
+<section class="question hyphenate">
+You can save and come back to the test at any time using the
+{{#link-to 'testSession' _id}}current URL{{/link-to}} (save it, or bookmark
+it, or look in your browser history). Note that the URL is not the same as the
+URL you may have been given by the recruiter or potential employer.
+</section>
+
 <h2>Instructions</h2>
+
 <section class="question hyphenate">
   {{markdown-component markdown=testInfo.instructions}}
 </section>
@@ -47,14 +64,18 @@
   <p>Please provide any additional comments here. This is where you can make excuses about the dog eating your laptop, or complain about how unfair the test was. Don't be shy, all feedback is welcome.</p>
 </section>
 {{markdown-answer answer=model.comments heading="Comments" createText="Add comments"}}
-
-
 <hr>
 <div class="row form-group">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
   <div class="col-sm-3">
-    <button class="btn btn-block btn-primary" {{action 'submit'}} >Submit</button>
+    <button id="save-button" class="btn btn-block btn-default ladda-button" data-style="slide-down" {{action 'save'}}>
+      <span class="ladda-label">Save</span>
+    </button>
+  </div>
+  <div class="col-sm-3">
+    <button id="submit-button" class="btn btn-block btn-primary ladda-button" data-style="slide-down" {{action 'submit'}}>
+      <span class="ladda-label">Submit</span>
+    </button>
   </div>
 </div>
