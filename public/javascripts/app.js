@@ -24,6 +24,13 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
   namespace: 'api'
 });
 
+marked.setOptions({
+  highlight: function (code) {
+    console.log(hljs.highlightAuto(code).value)
+    return hljs.highlightAuto(code).value;
+  }
+});
+
 
 function sendJSON(url, obj) {
   // Wrap because jQuery's promises are weird
@@ -96,6 +103,9 @@ App.TestStartController = Ember.ObjectController.extend({
   email: null,
   actions: {
     start: function() {
+      // this.set('loading', true);
+      var l = Ladda.create($('.ladda-button')[0]);
+      l.start();
       sendJSON('/api/start-test', {
         firstName: this.get('firstName'),
         lastName: this.get('lastName'),
@@ -104,8 +114,10 @@ App.TestStartController = Ember.ObjectController.extend({
         testId: this.get('model.testId'),
         startTime: moment().format()
       }).then(function(data) {
+        l.stop();
         this.transitionTo('testSession', data);
       }.bind(this)).catch(function(err) {
+        l.stop();
         // TODO
       }.bind(this));
     }
