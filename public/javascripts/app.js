@@ -27,7 +27,8 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
 marked.setOptions({
   highlight: function (code) {
     return hljs.highlightAuto(code).value;
-  }
+  },
+  smartypants: true,
 });
 
 
