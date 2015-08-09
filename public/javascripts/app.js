@@ -169,6 +169,17 @@ App.TestSessionController = Ember.ObjectController.extend({
       this.set('autoSaveTimer', autoSaveTimer);
     }
   },
+
+  duration: function() {
+    var duration = this.get('model.testInfo.duration');
+    return moment.duration(duration[0], duration[1]).format('h:mm');
+  }.property('model.testInfo.duration'),
+
+  startTime: function() {
+    var startTime = this.get('model.startTime');
+    return moment(startTime).format('lll');
+  }.property('model.startTime'),
+
   actions: {
     submit: function() {
       var l = Ladda.create($('#submit-button')[0]);
