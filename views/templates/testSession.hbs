@@ -1,5 +1,39 @@
 <h1>{{testInfo.name}}</h1>
 <div class="row">
+  <div class="col-sm-3">
+    <div class="well well-sm" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+      <table class="table" style="table-layout: fixed">
+        <colgroup>
+          <col style="width:70px" align="right">
+          <col align="left">
+        </colgroup>
+        <tbody>
+          <tr>
+            <td class="text-right">Name: </td>
+            <td>{{reqInfo.firstName}} {{reqInfo.lastName}}</td>
+          </tr>
+          <tr>
+            <td class="text-right">User: </td>
+            <td>{{reqInfo.email}}</td>
+          </tr>
+          <tr>
+            <td class="text-right">Duration: </td>
+            <td>{{duration}}</td>
+          </tr>
+          <tr>
+            <td class="text-right">Started: </td>
+            <td>{{startTime}}</td>
+          </tr>
+          {{#if submittedTime}}
+          <tr>
+            <td class="text-right">Submitted: </td>
+            <td>{{submittedTime}}</td>
+          </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
   <div class="col-sm-9">
     {{#if submittedTime}}
       <div class="alert alert-warning" role="alert">
@@ -79,23 +113,6 @@
           <span class="ladda-label">Submit</span>
         </button>
       </div>
-    </div>
-  </div>
-  <div class="col-sm-3">
-    <div class="well well-sm">
-      <table class="table">
-        <tbody>
-          <col align="right">
-          <tr>
-            <td class="text-right">Duration: </td>
-            <td>{{duration}}</td>
-          </tr>
-          <tr>
-            <td class="text-right">Started: </td>
-            <td>{{startTime}}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>

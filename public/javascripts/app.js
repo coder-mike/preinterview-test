@@ -180,6 +180,15 @@ App.TestSessionController = Ember.ObjectController.extend({
     return moment(startTime).format('lll');
   }.property('model.startTime'),
 
+  submittedTime: function() {
+    var submittedTime = this.get('model.submittedTime');
+    if (!submittedTime || !submittedTime.length) {
+      return "Not yet submitted";
+    }
+    submittedTime = submittedTime.pop();
+    return moment(submittedTime).format('lll');
+  }.property('model.submittedTime'),
+
   actions: {
     submit: function() {
       var l = Ladda.create($('#submit-button')[0]);
