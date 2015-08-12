@@ -367,7 +367,7 @@ App.QuestionEditorComponent = Ember.Component.extend({
         question: 'new part',
         number: String.fromCharCode('A'.charCodeAt(0) + question.parts.length)
       })
-      this.notifyPropertyChange('model');
+      this.notifyPropertyChange('question');
     },
     doneEditing: function() {
       this.set('editing', false);
