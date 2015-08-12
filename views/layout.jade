@@ -15,13 +15,17 @@ html(lang="en")
     .container
         block content
     script.
-        // Reload the page when the server restarts
-        var socket = io();
-        socket.on('disconnect', function() {
-            setTimeout(function() {
-                location.reload();
-            }, 200);
-        });
+        var isLocalServer = window.location.href.indexOf('localhost') > -1;
+
+        if (isLocalServer) {
+            // Reload the page when the server restarts
+            var socket = io();
+            socket.on('disconnect', function() {
+                setTimeout(function() {
+                    location.reload();
+                }, 200);
+            });
+        }
 
     script(src='/bower_components/jquery/dist/jquery.min.js')
     script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
