@@ -1,0 +1,48 @@
+{{#if editing}}
+  <div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+      <button class="btn btn-sm btn-primary pull-right" {{action 'doneEditing'}} ><span class="glyphicon glyphicon-ok-sign"></span> Done</button>
+      Edit Question
+    </div>
+    <div class="panel-body">
+      <h2 class="clearfix">
+        <a class="header-anchor"
+          id="question-{{question.number}}"
+          href="#question-{{question.number}}">
+          <span class="header-link"></span>
+        </a>
+        Question {{question.number}}
+      </h2>
+      <h3>Information</h3>
+      {{markdown-answer answer=question.information createText="Add question information"}}
+      <h3>Question</h3>
+      {{markdown-answer answer=question.question createText="Add question content"}}
+      {{#each question.parts as |part|}}
+        <h3>
+          <a class="header-anchor"
+            id="question-{{question.number}}-{{part.number}}"
+            href="#question-{{question.number}}-{{part.number}}">
+            <span class="header-link"></span>
+          </a>
+          Part {{part.number}}
+        </h3>
+        {{markdown-answer answer=part.question createText="Add part content"}}
+      {{/each}}
+      <button class="btn btn-default" {{action 'addPart' question}} >Add Part</button>
+    </div>
+    <div class="panel-footer clearfix">
+      <button class="btn btn-primary pull-right" {{action 'doneEditing'}} ><span class="glyphicon glyphicon-ok-sign"></span> Done</button>
+    </div>
+  </div>
+{{else}}
+  <h2 class="clearfix">
+    <button class="btn btn-default pull-right" {{action 'editQuestion'}} ><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+    <a class="header-anchor"
+      id="question-{{question.number}}"
+      href="#question-{{question.number}}">
+      <span class="header-link"></span>
+    </a>
+    Question {{question.number}}
+  </h2>
+  {{question-display question=question}}
+{{/if}}

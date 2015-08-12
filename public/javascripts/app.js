@@ -224,14 +224,6 @@ App.EditorController = Ember.ObjectController.extend({
       this.set('info.numberOfQuestions', questions.length);
       this.notifyPropertyChange('model');
     },
-    addPart: function(question) {
-      question.parts = question.parts || [];
-      question.parts.push({
-        question: 'new part',
-        number: String.fromCharCode('A'.charCodeAt(0) + question.parts.length)
-      })
-      this.notifyPropertyChange('model');
-    },
     cancel: function() {
       alert("Sorry, not implemented");
       // this.transitionTo('editor', this.get('_id'));
@@ -350,6 +342,26 @@ App.MarkdownAnswerComponent = Ember.Component.extend({
     edit: function() {
       this.set('editing', true);
       this.set('editorFocus', true);
+    }
+  }
+});
+
+App.QuestionEditorComponent = Ember.Component.extend({
+  editing: false,
+  actions: {
+    editQuestion: function() {
+      this.set('editing', true);
+    },
+    addPart: function(question) {
+      question.parts = question.parts || [];
+      question.parts.push({
+        question: 'new part',
+        number: String.fromCharCode('A'.charCodeAt(0) + question.parts.length)
+      })
+      this.notifyPropertyChange('model');
+    },
+    doneEditing: function() {
+      this.set('editing', false);
     }
   }
 });

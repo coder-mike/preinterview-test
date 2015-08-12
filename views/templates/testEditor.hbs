@@ -5,7 +5,8 @@
 {{markdown-answer answer=info.instructions createText="Add instructions"}}
 
 {{#each questions as |question|}}
-  <h2>
+  {{question-editor question=question}}
+{{!--   <h2>
     <a class="header-anchor"
       id="question-{{question.number}}"
       href="#question-{{question.number}}">
@@ -28,7 +29,7 @@
     </h3>
     {{markdown-answer answer=part.question createText="Add part content"}}
   {{/each}}
-  <button class="btn btn-default" {{action 'addPart' question}} >Add Part</button>
+  <button class="btn btn-default" {{action 'addPart' question}} >Add Part</button> --}}
   <hr>
 {{/each}}
 <button class="btn btn-default" {{action 'addQuestion'}} >Add Question</button>
