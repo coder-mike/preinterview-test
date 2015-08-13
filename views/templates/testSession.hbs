@@ -1,4 +1,9 @@
-<h1>{{testInfo.name}}</h1>
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-9">
+    <h1>{{testInfo.name}}</h1>
+  </div>
+</div>
 <div class="row">
   <div class="col-sm-3">
     <div class="well well-sm" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
@@ -24,7 +29,7 @@
             <td class="text-right">Started: </td>
             <td>{{startTime}}</td>
           </tr>
-          {{#if submittedTime}}
+          {{#if isSubmitted}}
           <tr>
             <td class="text-right">Submitted: </td>
             <td>{{submittedTime}}</td>
@@ -35,20 +40,20 @@
     </div>
   </div>
   <div class="col-sm-9">
-    {{#if submittedTime}}
+    {{#if isSubmitted}}
       <div class="alert alert-warning" role="alert">
-        This testing session has already been submitted. You may make further
+        <p>This testing session has already been submitted. You may make further
         changes and resubmit, but it is up to the employer as to whether the changes
         are accepted. If you are not the same person who submitted these answers,
-        please {{#link-to 'test' testId}}start a new session{{/link-to}}.
+        please {{#link-to 'test' testId}}start a new session{{/link-to}}.</p>
       </div>
     {{/if}}
 
     <section class="question hyphenate">
-    You can save and come back to the test at any time using the
+    <p>You can save and come back to the test at any time using the
     {{#link-to 'testSession' _id}}current URL{{/link-to}} (save it, or bookmark
     it, or look in your browser history). Note that the URL is not the same as the
-    URL you may have been given by the recruiter or potential employer.
+    URL you may have been given by the recruiter or potential employer.</p>
     </section>
 
     <h2>Instructions</h2>
