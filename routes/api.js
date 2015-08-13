@@ -36,7 +36,7 @@ router.post('/start-test', function(req, res) {
             reqInfo: req.body,
             testId: req.body.testId,
             questions: test.questions,
-            startTime: moment().format() // The reqInfo also has a time, but we record both because I don't trust the client necessarily
+            startTime: getUtcTimeStr() // The reqInfo also has a time, but we record both because I don't trust the client necessarily
         };
         return db.insert(testSession).then(function(insertResult) {
             testSession._id = insertResult.id;
@@ -58,7 +58,7 @@ router.get('/test-session/:testSessionId', function(req, res) {
 });
 
 router.post('/submit-test', function(req, res) {
-    var submissionTime = moment().format();
+    var submissionTime = getUtcTimeStr();
 
     var testSession = req.body;
 
@@ -121,5 +121,9 @@ router.post('/save-test', function(req, res) {
         return test;
     }));
 });
+
+function getUtcTimeStr() {
+    return moment.utc().format();
+}
 
 module.exports = router;
