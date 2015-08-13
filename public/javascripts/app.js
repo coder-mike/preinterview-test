@@ -191,7 +191,6 @@ App.TestSessionController = Ember.ObjectController.extend({
 
   isSubmitted: function() {
     var submittedTime = this.get('model.submittedTime');
-    console.log("Submitted Time ", submittedTime);
     return submittedTime && submittedTime.length > 0;
   }.property(),
 

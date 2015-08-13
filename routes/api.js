@@ -58,31 +58,54 @@ router.get('/test-session/:testSessionId', function(req, res) {
 });
 
 router.post('/submit-test', function(req, res) {
+    var submissionTime = moment().format();
+
     var testSession = req.body;
-    testSession.submitted = true;
-    if (!testSession.submittedTime) {
-        testSession.submittedTime = [];
-    }
-    testSession.submittedTime.push(moment().format()); // Just in case they submit more than once
 
-    var updatedTestSession = db.insert(testSession).then(function(insertResult) {
-        // Update revision
-        testSession._rev = insertResult.rev;
-        return testSession;
+    // create new doc for submission
+    var submissionDoc = merge(true, testSession);
+    submissionDoc.type = 'test-submission';
+    delete submissionDoc._rev;
+    delete submissionDoc._id;
+    submissionDoc.testSessionId = testSession._id;
+    submissionDoc.submissionTime = submissionTime;
+    // Insert the submission, and then update the test session
+    var result = db.insert(submissionDoc).then(function() {
+
+        // Fetch existing session information so that we have the right revision
+        return db.get(testSession._id).then(function(orig) {
+            // Use original revision (ignore conflicts)
+            testSession._rev = orig._rev;
+
+            testSession.submitted = true;
+            if (!testSession.submittedTime) {
+                testSession.submittedTime = [];
+            }
+            testSession.submittedTime.push(submissionTime); // Just in case they submit more than once
+
+            return db.insert(testSession).then(function(insertResult) {
+                // Update revision
+                testSession._rev = insertResult.rev;
+                return testSession;
+            });
+        });
+
     });
-
-    res.json(updatedTestSession);
+    res.json(result);
 });
 
 router.post('/save-test/', function(req, res) {
     var testSession = req.body;
-    var updatedTestSession = db.insert(testSession).then(function(insertResult) {
-        // Update revision
-        testSession._rev = insertResult.rev;
-        return testSession;
-    });
+    var result = db.get(testSession._id).then(function(orig) {
+        testSession._rev = orig._rev; // ignore conflicts
+        return db.insert(testSession).then(function(insertResult) {
+            // Update revision
+            testSession._rev = insertResult.rev;
+            return testSession;
+        });
 
-    res.json(updatedTestSession);
+    });
+    res.json(result);
 });
 
 router.get('/test/:testId', function(req, res) {
