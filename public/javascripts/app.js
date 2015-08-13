@@ -1,7 +1,7 @@
 window.App = Ember.Application.create({
-  LOG_TRANSITIONS: true,
-  LOG_ACTIVE_GENERATION: true,
-  LOG_VIEW_LOOKUPS: true,
+  // LOG_TRANSITIONS: true,
+  // LOG_ACTIVE_GENERATION: true,
+  // LOG_VIEW_LOOKUPS: true,
   rootElement: '#ember-app',
   // LOG_TRANSITIONS_INTERNAL: true,
   // LOG_RESOLVER: true
@@ -153,21 +153,22 @@ App.TestSessionController = Ember.ObjectController.extend({
   },
   autoSave: function() {
     // TODO: Only save if modified
-    sendJSON('/api/save-test', this.get('model'))
-      .then(function(data, status) {
-        // Update revision
-        this.set('model._rev', data._rev);
-        this.set('autoSaveError', null);
-      }.bind(this)).catch(function(err) {
-        this.set('autoSaveError', 'Warning: could not auto-save.');
-      }.bind(this));
+    // Auto-save is temporarily disabled because open background pages will auto-save over user-requested saves
+    // sendJSON('/api/save-test', this.get('model'))
+    //   .then(function(data, status) {
+    //     // Update revision
+    //     this.set('model._rev', data._rev);
+    //     this.set('autoSaveError', null);
+    //   }.bind(this)).catch(function(err) {
+    //     this.set('autoSaveError', 'Warning: could not auto-save.');
+    //   }.bind(this));
 
-    // Schedule next auto-save
-    var autoSaveTimer = this.get('autoSaveTimer')
-    if (autoSaveTimer) {
-      autoSaveTimer = Ember.run.later(this, 'autoSave', null, this.get('autoSaveInterval'));
-      this.set('autoSaveTimer', autoSaveTimer);
-    }
+    // // Schedule next auto-save
+    // var autoSaveTimer = this.get('autoSaveTimer')
+    // if (autoSaveTimer) {
+    //   autoSaveTimer = Ember.run.later(this, 'autoSave', null, this.get('autoSaveInterval'));
+    //   this.set('autoSaveTimer', autoSaveTimer);
+    // }
   },
 
   duration: function() {
