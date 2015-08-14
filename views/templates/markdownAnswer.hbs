@@ -1,24 +1,33 @@
 <section>
   {{#if hasAnswer}}
     {{#if editing}}
-      <div class="well">
-        {{#if heading}}
-          <h3>{{heading}}</h3>
-        {{/if}}
-        <div class="row answer-well">
+      <div class="well answer-well">
+        <div class="row">
           <div class="col-md-6 clearfix">
+            <h3 class="answer-heading">
+              <span class="glyphicon glyphicon-asterisk answer-asterisk"></span>
+              {{heading}}
+            </h3>
             <div class="heading-note">You can use <a href="https://help.github.com/articles/markdown-basics/">markdown</a></div>
             {{markdown-editor focus=editorFocus value=answer rows="6"}}
           </div>
-          <section class="col-md-6 answer-html">
-            {{markdown-component markdown=answer}}
-          </section>
+          <div class="col-md-6">
+            <h3 class="answer-heading">
+              Preview
+            </h3>
+            <div class="answer-html">
+              {{markdown-component markdown=answer}}
+            </div>
+          </div>
         </div>
       </div>
     {{else}}
       <div class="well answer-well clickable" {{action 'edit'}}>
         {{#if heading}}
-          <h3>{{heading}}</h3>
+          <h3>
+            <span class="glyphicon glyphicon-asterisk answer-asterisk"></span>
+            {{heading}}
+          </h3>
         {{/if}}
         <section class="answer-html">
           {{markdown-component markdown=answer runHyphenate=true}}
