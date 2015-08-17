@@ -12,6 +12,13 @@ html(lang="en")
         .container-fluid
             .navbar-header
                 a.navbar-brand(href="/") Preinterview Test
+
+            .navbar-collapse.collapse
+                ul.nav.navbar-nav
+                    li(class=activeTab=='job-seekers'?'active':undefined)
+                        a(href="/job-seekers") For job-seekers
+                    li(class=activeTab=='for-employers'?'active':undefined)
+                        a(href="/for-employers") For employers
     .container
         block content
     script.

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    h1 Request a quote
+    form.form-horizontal(action="/post-quote" method="POST")
+        .form-group
+            label.control-label.col-sm-2(for="first-name") First name:
+            div.col-sm-6
+                input(type="test" class="form-control" id="first-name" name="first-name" autofocus)
+        .form-group
+            label.control-label.col-sm-2(for="last-name") Last name:
+            div.col-sm-6
+                input(type="test" class="form-control" id="last-name" name="last-name")
+        .form-group
+            label.control-label.col-sm-2(for="email") Email address:
+            div.col-sm-6
+                input(type="email" class="form-control" id="email" name="email")
+        .form-group
+            label.control-label.col-sm-2(for="company") Company:
+            div.col-sm-6
+                input(type="test" class="form-control" id="company" name="company")
+        .form-group
+            div.col-sm-offset-2.col-sm-6
+                label(for="is-recruiter")
+                    input(type="checkbox" id="is-recruiter" name="is-recruiter")
+                    | &nbsp;Recruitment agency
+        .form-group
+            label.control-label.col-sm-2(for="number-of-tests") Package:
+            div.col-sm-6
+                select(class="form-control" id="package" name="package")
+                    option(value="1") 1 test
+                    option(value="5") 5 tests
+                    option(value="20") 20 tests
+                    option(value="100") 100 tests
+        .form-group
+            .col-sm-offset-2.col-sm-6
+                button(type="submit" class="btn btn-primary") Submit

@@ -1,6 +1,18 @@
 extends layout
 
 block content
-    .page-header
-        h1 Preinterview Test
+    .jumbotron
+        .row
+            .col-md-4
+                img(src="/images/guru-gate-logo.svg", alt="")
+            .col-md-8
+                h1 Preinterview Test
+                p Professional software-engineering entrance tests
+
     p This website is under construction. If you were given a direct link by an employer, please follow that link.
+
+    .row
+        .col-sm-6
+            a(href="/job-seekers").btn.btn-block.btn-primary For job-seekers
+        .col-sm-6
+            button.btn.btn-block.btn-primary For employers
